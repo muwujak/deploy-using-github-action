@@ -11,13 +11,15 @@ jobs:
         uses: actions/checkout@main
       - name: list directory
         run: ls ${{ github.workspace }}
-
-  build-docker-image:
-    runs-on: self-hosted
-    steps:
       - run: docker build -t simple-nginx-uwu .
-  
-  kubernetes-deployment:
-    runs-on: self-hosted
-    steps:
       - run: kubectl apply -f deployments/deployment.yaml
+
+  # build-docker-image:
+  #   runs-on: self-hosted
+  #   steps:
+  #     - run: docker build -t simple-nginx-uwu .
+  
+  # kubernetes-deployment:
+  #   runs-on: self-hosted
+  #   steps:
+  #     - run: kubectl apply -f deployments/deployment.yaml
