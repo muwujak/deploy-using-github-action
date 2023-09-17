@@ -8,7 +8,9 @@ jobs:
     steps:
       - run: ls -la
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
+      - name: list directory
+        run: ls ${{ github.workspace }}
 
   build-docker-image:
     runs-on: self-hosted
