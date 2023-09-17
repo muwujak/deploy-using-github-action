@@ -7,31 +7,31 @@ env:
 
 jobs:
 
-  check:
+  sync-check:
     runs-on: self-hosted
     steps:
       - name: Check out repository code
         uses: actions/checkout@main
-      - run: ls -la
       - name: list directory
-        run: ls ${{ github.workspace }}
-      - run: docker build -t simple-nginx-uwu .
-      - run: kubectl apply -f deployments/deployment.yaml
+        run: ls ${{ github.workspace }} -la
 
-  # build-docker-image:
-  #   runs-on: self-hosted
-  #   steps:
-  #     - run: docker build -t simple-nginx-uwu .
+  build-docker-image:
+    runs-on: self-hosted
+    needs: sync-check
+    steps:
+      - run: docker build -t ${{ env.app-name }} .
   
-  # kubernetes-deployment:
-  #   runs-on: self-hosted
-  #   steps:
-  #     - run: kubectl apply -f deployments/deployment.yaml
+  kubernetes-deployment:
+    runs-on: self-hosted
+    needs: build-docker-image
+    steps:
+      - run: kubectl apply -f deployments/deployment.yaml
 
   manual-post-checking:
     runs-on: self-hosted
+    needs: kubernetes-deployment
     steps:
       - name: list directory
-        run: ls ${{ github.workspace }}
-      - run: sleep 100s
-      - run: kubectl get pods --selector=app=simple-nginx-uwu --all-namespaces
+        run: ls ${{ github.workspace }} -la
+      - run: sleep 20s
+      - run: kubectl get pods --selector=app=${{ env.app-name }} --all-namespaces
