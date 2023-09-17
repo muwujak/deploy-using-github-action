@@ -11,11 +11,11 @@ env:
 
 jobs:
 
-  sync-check:
+  sync:
     runs-on: self-hosted
     steps:
-      # - name: Check out repository code
-      #   uses: actions/checkout@main
+      - name: Check out repository code
+        uses: actions/checkout@main
       - name: list directory
         run: ls ${{ github.workspace }} -la
 
@@ -31,7 +31,7 @@ jobs:
   
   build-push-docker-image:
     runs-on: self-hosted
-    # needs: build-docker-image
+    needs: sync
     steps:
       
       -
