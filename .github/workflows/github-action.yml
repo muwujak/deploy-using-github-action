@@ -1,6 +1,8 @@
 name: Simple docker build and kubernetes deployment
 run-name: Simple docker build and kubernetes deployment by ${{ github.actor }}
-on: [push]
+on: 
+  - push
+  - workflow_dispatch
 
 env:
   app-name: simple-nginx-uwu
