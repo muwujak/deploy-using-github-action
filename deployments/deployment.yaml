@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: custom-nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: simple-nginx-uwu
+  template:
+    metadata:
+      labels:
+        app: simple-nginx-uwu
+    spec:
+      containers:
+        - name: simple-nginx-uwu
+          image: simple-nginx-uwu
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-nginx-uwu-lb
+spec:
+  selector:
+    app: simple-nginx-uwu
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
