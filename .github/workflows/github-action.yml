@@ -17,3 +17,4 @@ jobs:
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - run: touch trace.txt
+      - run: cat "trace" > trace.txt
