@@ -1,14 +1,18 @@
 name: Simple docker build and kubernetes deployment
 run-name: Simple docker build and kubernetes deployment by ${{ github.actor }}
 on: [push]
+
+env:
+  app-name: simple-nginx-uwu
+
 jobs:
 
   check:
     runs-on: self-hosted
     steps:
-      - run: ls -la
       - name: Check out repository code
         uses: actions/checkout@main
+      - run: ls -la
       - name: list directory
         run: ls ${{ github.workspace }}
       - run: docker build -t simple-nginx-uwu .
@@ -23,3 +27,11 @@ jobs:
   #   runs-on: self-hosted
   #   steps:
   #     - run: kubectl apply -f deployments/deployment.yaml
+
+  manual-post-checking:
+    runs-on: self-hosted
+    steps:
+      - name: list directory
+        run: ls ${{ github.workspace }}
+      - run: sleep 100s
+      - run: kubectl get pods --selector=app=simple-nginx-uwu --all-namespaces
