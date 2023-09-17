@@ -3,10 +3,15 @@ run-name: Simple docker build and kubernetes deployment by ${{ github.actor }}
 on: [push]
 jobs:
 
+  check:
+    runs-on: self-hosted
+    steps:
+      - run: ls -la
+
   build-docker-image:
     runs-on: self-hosted
     steps:
-      - run: docker build -t simple-nginx-uwul .
+      - run: docker build -t simple-nginx-uwu .
   
   kubernetes-deployment:
     runs-on: self-hosted
