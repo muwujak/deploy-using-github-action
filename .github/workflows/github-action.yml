@@ -5,9 +5,9 @@ on:
   - workflow_dispatch
 
 env:
-  app-name: simple-nginx-uwu
-  app-tag: latest
-  docker-registry: 10.227.1.20:8083
+  APP_NAME: simple-nginx-uwu
+  APP_TAG: latest
+  DOCKER_REGISTRY: 10.227.1.20:8083
 
 jobs:
 
@@ -36,33 +36,33 @@ jobs:
       
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v3
-      # - run: docker build -t ${{ env.docker-registry }}/${{ env.app-name }}:${{ env.app-tag }} .
+      # - run: docker build -t ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.APP_TAG }} .
       - name: Login to private Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.NEXUS_USERNAME }}
           password: ${{ secrets.NEXUS_PASSWORD }}
-          registry: ${{ env.docker-registry }}
+          registry: ${{ env.DOCKER_REGISTRY }}
       - run: docker images
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ env.docker-registry }}/${{ env.app-name }}:${{ env.app-tag }}
-      # - run: docker login ${{ env.docker-registry }} -u ${{ secrets.NEXUS_USERNAME }} -p ${{ secrets.NEXUS_PASSWORD }} 
-      # - run: docker push ${{ env.docker-registry }}/${{ env.app-name }}:${{ env.app-tag }}
+          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.APP_TAG }}
+      # - run: docker login ${{ env.DOCKER_REGISTRY }} -u ${{ secrets.NEXUS_USERNAME }} -p ${{ secrets.NEXUS_PASSWORD }} 
+      # - run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.APP_TAG }}
       
   kubernetes-deployment:
     runs-on: self-hosted
     needs: build-push-docker-image
     steps:
-      - run: export docker-registry=${{env.docker-registry}}
-      - run: export app-name=${{env.app-name}}
-      - run: export app-tag=${{env.app-tag}}
-      # ${{ env.docker-registry }}/${{ env.app-name }}:${{ env.app-tag }} 
-      - run: echo "$app-name"
-      - run: echo "$app-tag"
+      - run: echo "$APP_NAME"
+      - run: export DOCKER_REGISTRY=${{env.DOCKER_REGISTRY}}
+      - run: export APP_NAME=${{env.APP_NAME}}
+      - run: export APP_TAG=${{env.APP_TAG}}
+      # ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.APP_TAG }} 
+      - run: echo "$APP_NAME"
       - run: envsubst < deployments/deployment.yaml 
       - run: envsubst < deployments/deployment.yaml | kubectl apply -f -
 
@@ -73,4 +73,4 @@ jobs:
       - name: list directory
         run: ls ${{ github.workspace }} -la
       - run: sleep 20s
-      - run: kubectl get pods --selector=app=${{ env.app-name }} --all-namespaces
+      - run: kubectl get pods --selector=app=${{ env.APP_NAME }} --all-namespaces
