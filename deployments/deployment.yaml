@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: simple-nginx-uwu
-          image: ${docker-registry}/${app-name}:${env.app-tag}
+          image: $docker-registry/$app-name:$app-tag
           ports:
             - containerPort: 80
 ---
