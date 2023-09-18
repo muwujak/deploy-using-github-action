@@ -57,6 +57,10 @@ jobs:
     runs-on: self-hosted
     needs: build-push-docker-image
     steps:
+      - run: export docker-registry=${{env.docker-registry}}
+      - run: export app-name=${{env.app-name}}
+      - run: export app-tag=${{env.app-tag}}
+      # ${{ env.docker-registry }}/${{ env.app-name }}:${{ env.app-tag }} 
       - run: echo "$app-name"
       - run: echo "$app-tag"
       - run: envsubst < deployments/deployment.yaml 
