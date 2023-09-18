@@ -58,7 +58,9 @@ jobs:
     needs: build-push-docker-image
     steps:
       - run: echo "$app-name"
-      - run: kubectl apply -f deployments/deployment.yaml
+      - run: echo "$app-tag"
+      - run: envsubst < deployments/deployment.yaml 
+      - run: envsubst < deployments/deployment.yaml | kubectl apply -f -
 
   manual-post-checking:
     runs-on: self-hosted
