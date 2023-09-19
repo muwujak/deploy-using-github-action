@@ -14,13 +14,13 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: setup host tag using date
-        uses: echo "app-tag-new=$(date +'%Y-%m-%d--%H-%M-%S')" >> "$GITHUB_ENV"
+        run: echo "app-tag-new=$(date +'%Y-%m-%d--%H-%M-%S')" >> "$GITHUB_ENV"
       - name: setup github env tag using date
-        uses: echo "APP_TAG=$(date +'%Y-%m-%d--%H-%M-%S')" >> "$GITHUB_ENV"
+        run: echo "APP_TAG=$(date +'%Y-%m-%d--%H-%M-%S')" >> "$GITHUB_ENV"
       - name: TEST HOST ENV 1
-        uses: echo $app-tag-new
+        run: echo $app-tag-new
       - name: TEST GITHUB ENV 1
-        uses: echo $app-tag
+        run: echo $app-tag
       - name: Check out repository code
         uses: actions/checkout@main
       - name: list directory
@@ -31,9 +31,9 @@ jobs:
     needs: sync-and-setup
     steps:
       - name: TEST HOST ENV 2
-        uses: echo $app-tag-new
+        run: echo $app-tag-new
       - name: TEST GITHUB ENV 2
-        uses: echo $APP_TAG
+        run: echo $APP_TAG
       - name: Login to private Docker Hub
         uses: docker/login-action@v3
         with:
@@ -53,9 +53,9 @@ jobs:
     needs: build-push-docker-image
     steps:
       - name: TEST HOST ENV 3
-        uses: echo $app-tag-new
+        run: echo $app-tag-new
       - name: TEST GITHUB ENV 3
-        uses: echo $APP_TAG
+        run: echo $APP_TAG
       - run: envsubst < deployments/deployment.yaml 
       - run: envsubst < deployments/deployment.yaml | kubectl apply -f -
 
