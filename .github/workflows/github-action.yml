@@ -6,11 +6,10 @@ on:
 
 env:
   APP_NAME: simple-nginx-uwu
-  APP_TAG: latest
+  APP_TAG: ${{ github.event.repository.updated_at}}
   DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
 
 jobs:
-
   sync:
     runs-on: self-hosted
     steps:
