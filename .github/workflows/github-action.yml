@@ -4,13 +4,13 @@ on:
   - push
   - workflow_dispatch
 
-env:
-  APP_NAME: simple-nginx-uwu
-  APP_TAG: DUMMY # this tag will be replaced in setup to be using date
-  DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
-
+  
 jobs:
   CI_CD_Pipeline:
+    env:
+      APP_NAME: simple-nginx-uwu
+      APP_TAG: DUMMY # this tag will be replaced in setup to be using date
+      DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
     runs-on: self-hosted
     steps:
       # SETUP
@@ -33,7 +33,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${$APP_TAG}
+          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}:${{ env.APP_TAG }}
       # KUBERENETES DEPLOYMENT
       - run: envsubst < deployments/deployment.yaml # DEBUG
       - run: envsubst < deployments/deployment.yaml | kubectl apply -f -
